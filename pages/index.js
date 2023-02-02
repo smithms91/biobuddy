@@ -106,8 +106,8 @@ export default function Home(props) {
         <meta name="viewport" content="initial-scale=1, width=device-width" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main} style={AIResponse !== '' ? {'marginBottom': '5rem'} : {'marginBottom': '0rem'}}>
-        <button className={styles.github_button}><GitHubIcon width={30} height={30} /><span>Star on GitHub</span></button>
+      <main className={styles.main} style={AIResponse !== '' ? { 'marginBottom': '5rem' } : { 'marginBottom': '0rem' }}>
+        <button className={styles.github_button}><GitHubIcon width={30} height={30} /><a href="https://github.com/smithms91/biobuddy" target='_blank'><span>Star on GitHub</span></a></button>
         <h1>Generate your next Twitter bio in seconds</h1>
         <p>{biosCreated} bios created so far.</p>
         <div className={styles.content_box}>
@@ -138,7 +138,7 @@ export default function Home(props) {
         </div>
         <button className={styles.response_button} onClick={(e) => { handleBioAPI(); handleOpenAIResponse(e); }}>Generate your bio. <EastIcon /></button>
         <div className={styles.response_box}>
-          {AIResponse !== '' && <h1 style={{'fontSize': '1.5rem', 'marginTop': '-1rem'}}>Your Generated Bios</h1>}
+          {AIResponse !== '' && <h1 style={{ 'fontSize': '1.5rem', 'marginTop': '-1rem' }}>Your Generated Bios</h1>}
           {AIResponse.substring(AIResponse.indexOf("1") + 3).split("2.").map((singleResponse) => {
             return (
               <div onClick={(e) => {
