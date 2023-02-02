@@ -1,8 +1,9 @@
 const { Configuration, OpenAIApi } = require( "openai");
+import { NextApiRequest, NextApiResponse } from 'next'
 
 
-export default async function handler(req, res) {
-    const prompt = req.body;
+export default async function handler(NextApiRequest, NextApiResponse) {
+    const prompt = NextApiRequest.body;
     // console.log(prompt)
     const configuration = new Configuration({
       organization: "org-4tu4inJ5KymAytedgTpWKytx",
@@ -34,10 +35,10 @@ export default async function handler(req, res) {
 
     try {
         const json = await response.json();
-        res.status(200).json(json)
+        NextApiResponse.status(200).json(json)
     } catch (error) {
         console.log(error)
-        res.status(500).send('Internal Server Error.');
+        NextApiResponse.status(500).send('Internal Server Error.');
     }
     
   }

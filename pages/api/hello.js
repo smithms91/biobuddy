@@ -1,10 +1,11 @@
 // import PocketBase from 'pocketbase';
 import { connectDb, models } from "../../lib/db"
 const mongoose = require('mongoose');
+import { NextApiRequest, NextApiResponse } from 'next'
 
 
 // Gets current bio created amount, then updates. Couldnt update ++ in 1 DB Call
-export default async function handler(req, res) {
+export default async function handler(NextApiRequest, NextApiResponse) {
   // const pb = new PocketBase('http://127.0.0.1:8090');
 
   // const authData = await pb.admins.authWithPassword(process.env.DB_USERNAME, process.env.DB_PASSWORD);
@@ -22,5 +23,5 @@ export default async function handler(req, res) {
   console.log(response)
   // return res.send(response)
 
-  res.status(200).send(response.biosCreated)
+  NextApiResponse.status(200).send(response.biosCreated)
 }
