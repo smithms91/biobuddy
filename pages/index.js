@@ -59,10 +59,15 @@ export default function Home(props) {
       },
       body: JSON.stringify(prompt)
     })
-    let newResponse = await response.json()
-    setAIResponse(newResponse.choices[0].text);
-    console.log(AIResponse)
-    setLoading(false);
+
+    try {
+      let newResponse = await response.json()
+      setAIResponse(newResponse.choices[0].text);
+      console.log(AIResponse)
+      setLoading(false);
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handleBioAPI = async () => {
@@ -74,9 +79,13 @@ export default function Home(props) {
       },
       body: 1
     })
-    let newResponse = await response.json()
-    console.log(newResponse)
-    setBiosCreated(newResponse + 1)
+    
+    try {
+      let newResponse = await response.json()
+      setBiosCreated(newResponse + 1)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const action = (

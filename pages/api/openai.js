@@ -22,7 +22,7 @@ export default async function handler(req, res) {
       stream: false,
       n: 1
     }
-
+    
     const response = await fetch('https://api.openai.com/v1/completions', {
         method: 'POST',
         headers: {
@@ -32,10 +32,14 @@ export default async function handler(req, res) {
         body: JSON.stringify(payload),
     });
 
-    const json = await response.json();
-    console.log(json)
-  
+    try {
+        const json = await response.json();
+        res.status(200).json(json)
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Internal Server Error.');
+    }
     
-    res.status(200).json(json)
   }
   
+ 
