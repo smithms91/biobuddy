@@ -1,25 +1,40 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
-import { useState } from 'react';
+
+//MUI Stuff
 import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import EastIcon from '@mui/icons-material/East';
-const inter = Inter({ subsets: ['latin'] })
+//DB
+import PocketBase from 'pocketbase';
 
-export default function Home() {
+import { useState } from 'react';
 
-  const [counter, setCounter] = useState(0);
+export default function Home({ finalData }) {
+
+  const [biosCreated, setBiosCreated] = useState(finalData.likes);
   const [value, setValue] = useState('funny');
   const [AIResponse, setAIResponse] = useState('')
+
+
+  const handleBioAPI = async () => {
+
+    let response = await fetch('/api/hello', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'Application/JSON'
+      },
+      body: 1
+    })
+    let newResponse = await response.json()
+    setBiosCreated(newResponse.likes)
+  }
+
 
   return (
     <>
@@ -32,32 +47,38 @@ export default function Home() {
       <main className={styles.main}>
         <button className={styles.github_button}><GitHubIcon width={30} height={30} /><span>Star on GitHub</span></button>
         <h1>Generate your next Twitter bio in seconds</h1>
-        <p>18,421 bios created so far.</p>
+        <p>{biosCreated} bios created so far.</p>
         <div className={styles.content_box}>
-          <h5>Copy your current bio (or write a few sentences about yourself).</h5>
+          <div className={styles.info_container}>
+            <span>1</span>
+            <h5>Copy your current bio (or write a few sentences about yourself).</h5>
+          </div>
           <TextField InputLabelProps={{ style: { color: "rgba(0,0,0,.5)" } }} fullWidth className={styles.textbox} id="outlined-basic" label="Tell us about yourself" variant="outlined" multiline rows={4} />
-          <h5 className={styles.vibe}>Select your vibe.</h5>
+          <div className={styles.info_container}>
+            <span>2</span>
+            <h5>Select your vibe.</h5>
+          </div>
           <FormControl>
             <InputLabel id="demo-simple-select-helper-label">Vibe</InputLabel>
-            <Select style={{'color': 'rgba(0,0,0,.5)'}} className={styles.dropdown}
+            <Select style={{ 'color': 'rgba(0,0,0,.5)' }} className={styles.dropdown}
               labelId="demo-simple-select-helper-label"
               id="demo-simple-select-helper"
               value={value}
               label="Vibe"
               onChange={(e) => setValue(e.target.value)}
             >
-              <MenuItem style={{'color': 'rgba(0,0,0,.5)'}} value={'funny'}>Funny</MenuItem>
-              <MenuItem style={{'color': 'rgba(0,0,0,.5)'}} value={'professional'}>Professional</MenuItem>
-              <MenuItem style={{'color': 'rgba(0,0,0,.5)'}} value={'general'}>General</MenuItem>
+              <MenuItem style={{ 'color': 'rgba(0,0,0,.5)' }} value={'funny'}>Funny</MenuItem>
+              <MenuItem style={{ 'color': 'rgba(0,0,0,.5)' }} value={'professional'}>Professional</MenuItem>
+              <MenuItem style={{ 'color': 'rgba(0,0,0,.5)' }} value={'general'}>General</MenuItem>
             </Select>
           </FormControl>
           {/* <button className={styles.button}>Generate your bio.</button> */}
         </div>
-        <button className={styles.response_button}>Generate your bio. <EastIcon /></button>
+        <button className={styles.response_button} onClick={(e) => handleBioAPI()}>Generate your bio. <EastIcon /></button>
         <div className={styles.response_box}>
           {AIResponse &&
             <>
-              <p style={{ 'margin-top': '1rem' }}>asdsIt is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+              <p style={{ 'marginTop': '1rem' }}>asdsIt is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
               <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
             </>
           }
@@ -65,11 +86,29 @@ export default function Home() {
         <div className={styles.footer_box}>
           <h5>Powered by <strong>OpenAI</strong> and <strong>Vercel Edge Functions</strong></h5>
           <ul style={{ 'margin': '.5rem 0 .7rem 0' }}>
-            <li style={{ 'margin-right': '1rem' }}><TwitterIcon /></li>
+            <li style={{ 'marginRight': '1rem' }}><TwitterIcon /></li>
             <li><GitHubIcon /></li>
           </ul>
         </div>
       </main>
     </>
   )
+}
+
+
+export async function getServerSideProps(context) {
+
+  const pb = new PocketBase('http://127.0.0.1:8090');
+  const data = {
+    "likes": 123,
+  };
+
+  const authData = await pb.admins.authWithPassword(process.env.DB_USERNAME, process.env.DB_PASSWORD);
+  const likes = await pb.collection('likes').getOne(process.env.DB_TABLE_ID);
+
+  let finalData = JSON.parse(JSON.stringify(likes));
+
+  return {
+    props: { finalData }, // will be passed to the page component as props
+  }
 }
