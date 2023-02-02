@@ -44,7 +44,15 @@
   margin-bottom: 1rem;
 }
 
-.info_container span {
+.info_container2 {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.info_container span,
+.info_container2 span {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -56,6 +64,9 @@
   border-radius: 100%;
   margin-right: .5rem;
 }
+
+
+
 
 .textbox {
   width: 90vw;

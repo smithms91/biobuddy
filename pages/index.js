@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import styles from '@/styles/Home.module.css'
-
 //MUI Stuff
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -79,7 +78,7 @@ export default function Home(props) {
       },
       body: 1
     })
-    
+
     try {
       let newResponse = await response.json()
       setBiosCreated(newResponse + 1)
@@ -117,7 +116,7 @@ export default function Home(props) {
             <h5>Copy your current bio (or write a few sentences about yourself).</h5>
           </div>
           <TextField onChange={(e) => setBio(e.target.value)} InputLabelProps={{ style: { color: "rgba(0,0,0,.5)" } }} fullWidth className={styles.textbox} id="outlined-basic" label="Tell us about yourself" variant="outlined" multiline rows={4} />
-          <div className={styles.info_container}>
+          <div className={styles.info_container2}>
             <span>2</span>
             <h5>Select your vibe.</h5>
           </div>
