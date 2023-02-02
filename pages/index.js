@@ -16,13 +16,13 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 
 //DB
-import PocketBase from 'pocketbase';
+import { connectDb, models } from "../lib/db"
+// import PocketBase from 'pocketbase';
 
 import { useState } from 'react';
 
-export default function Home({ finalData }) {
-
-  const [biosCreated, setBiosCreated] = useState(finalData?.likes);
+export default function Home(props) {
+  const [biosCreated, setBiosCreated] = useState(props.biosCreated);
   const [bio, setBio] = useState('');
   const [vibe, setVibe] = useState('funny');
   const [AIResponse, setAIResponse] = useState('')
@@ -73,7 +73,8 @@ export default function Home({ finalData }) {
       body: 1
     })
     let newResponse = await response.json()
-    setBiosCreated(newResponse.likes)
+    console.log(newResponse)
+    setBiosCreated(newResponse + 1)
   }
 
   const action = (
@@ -125,7 +126,7 @@ export default function Home({ finalData }) {
           </FormControl>
           {/* <button className={styles.button}>Generate your bio.</button> */}
         </div>
-        <button className={styles.response_button} onClick={(e) => { handleBioAPI(); handleOpenAIResponse(e) }}>Generate your bio. <EastIcon /></button>
+        <button className={styles.response_button} onClick={(e) => { handleBioAPI(); handleOpenAIResponse(e); }}>Generate your bio. <EastIcon /></button>
         <div className={styles.response_box}>
           {AIResponse !== '' && <h1 style={{'fontSize': '1.5rem', 'marginTop': '-1rem'}}>Your Generated Bios</h1>}
           {AIResponse.substring(AIResponse.indexOf("1") + 3).split("2.").map((singleResponse) => {
@@ -165,14 +166,15 @@ export default function Home({ finalData }) {
 
 export async function getServerSideProps(context) {
 
-  const pb = new PocketBase('http://127.0.0.1:8090')
+  // const pb = new PocketBase('http://127.0.0.1:8090')
+  // const authData = await pb.admins.authWithPassword(process.env.DB_USERNAME, process.env.DB_PASSWORD);
+  // const likes = await pb.collection('likes').getOne(process.env.DB_TABLE_ID);
+  // let finalData = JSON.parse(JSON.stringify(likes));
 
-  const authData = await pb.admins.authWithPassword(process.env.DB_USERNAME, process.env.DB_PASSWORD);
-  const likes = await pb.collection('likes').getOne(process.env.DB_TABLE_ID);
-
-  let finalData = JSON.parse(JSON.stringify(likes));
+  connectDb();
+  const currentBiosCreated = await models.Bio.findOne();
 
   return {
-    props: { finalData } // will be passed to the page component as props
+    props: { biosCreated: currentBiosCreated.biosCreated } // will be passed to the page component as props
   }
 }

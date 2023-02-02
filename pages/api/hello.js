@@ -1,16 +1,25 @@
-import PocketBase from 'pocketbase';
+// import PocketBase from 'pocketbase';
+import { connectDb, models } from "../../lib/db"
+
 
 // Gets current bio created amount, then updates. Couldnt update ++ in 1 DB Call
 export default async function handler(req, res) {
-  const pb = new PocketBase('http://127.0.0.1:8090');
-  const authData = await pb.admins.authWithPassword(process.env.DB_USERNAME, process.env.DB_PASSWORD);
+  // const pb = new PocketBase('http://127.0.0.1:8090');
 
-  const getBioAmount = await pb.collection('likes').getOne(process.env.DB_TABLE_ID);
-  let data = JSON.parse(JSON.stringify(getBioAmount));
+  // const authData = await pb.admins.authWithPassword(process.env.DB_USERNAME, process.env.DB_PASSWORD);
 
-  const updateAmount = await pb.collection('likes').update(process.env.DB_TABLE_ID, {
-    likes: data.likes + 1,
-  });
+  // const getBioAmount = await pb.collection('likes').getOne(process.env.DB_TABLE_ID);
+  // let data = JSON.parse(JSON.stringify(getBioAmount));
 
-  res.status(200).send(updateAmount)
+  // const updateAmount = await pb.collection('likes').update(process.env.DB_TABLE_ID, {
+  //   likes: data.likes + 1,
+  // });
+
+  connectDb();
+  const currentBiosCreated = await models.Bio.findOne();
+  const response = await models.Bio.findOneAndUpdate({'name': 'biosCreated'}, {'biosCreated': currentBiosCreated.biosCreated+=1})
+  console.log(response)
+  // return res.send(response)
+
+  res.status(200).send(response.biosCreated)
 }

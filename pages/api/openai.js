@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     let payload = {
       model:"text-davinci-003",
       prompt,
-      temperature:0.4,
+      temperature: .7,
       max_tokens: 200,
       top_p:1,
       frequency_penalty:0,
