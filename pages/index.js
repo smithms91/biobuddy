@@ -17,6 +17,8 @@ import CloseIcon from '@mui/icons-material/Close';
 
 //DB
 import { connectDb, models } from "../lib/db"
+const mongoose = require('mongoose');
+
 // import PocketBase from 'pocketbase';
 
 import { useState } from 'react';
@@ -170,6 +172,7 @@ export async function getServerSideProps(context) {
   // const authData = await pb.admins.authWithPassword(process.env.DB_USERNAME, process.env.DB_PASSWORD);
   // const likes = await pb.collection('likes').getOne(process.env.DB_TABLE_ID);
   // let finalData = JSON.parse(JSON.stringify(likes));
+  mongoose.set("strictQuery", false);
 
   connectDb();
   const currentBiosCreated = await models.Bio.findOne();

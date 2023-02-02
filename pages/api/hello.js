@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   // const updateAmount = await pb.collection('likes').update(process.env.DB_TABLE_ID, {
   //   likes: data.likes + 1,
   // });
-
+  mongoose.set("strictQuery", false);
   connectDb();
   const currentBiosCreated = await models.Bio.findOne();
   const response = await models.Bio.findOneAndUpdate({'name': 'biosCreated'}, {'biosCreated': currentBiosCreated.biosCreated+=1})
