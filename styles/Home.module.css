@@ -20,7 +20,7 @@
   background-color: white;
   margin: 2rem 0;
   font-family: 'Roboto', sans-serif;
-  
+
 }
 
 .github_button span {
@@ -38,6 +38,12 @@
   margin-bottom: 2rem;
 }
 
+.content_box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
 .info_container {
   display: flex;
   align-items: center;
@@ -65,15 +71,11 @@
   margin-right: .5rem;
 }
 
-
-
-
 .textbox {
   width: 90vw;
   border-radius: 10px;
   margin-bottom: 2rem;
   background-color: rgba(255, 255, 255, 0.519);
-  
 }
 
 .dropdown {
@@ -108,9 +110,8 @@
   padding: 1rem 2rem;
   border: 1px solid lightgrey;
   border-radius: 10px;
-  box-shadow: 0px 15px 15px -10px rgba(0,0,0,0.1);
+  box-shadow: 0px 15px 15px -10px rgba(0, 0, 0, 0.1);
   background-color: rgba(255, 255, 255, 0.219);
-
 }
 
 .single_response {
@@ -144,7 +145,22 @@
 }
 
 
+@media only screen and (min-width: 600px) {
+  .textbox {
+    width: 30vw;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    background-color: rgba(255, 255, 255, 0.519);
+  }
 
+  .dropdown {
+    width: 30vw;
+  }
+
+  .response_button {
+    width: 30vw;
+  }
+}
 
 /* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {}
