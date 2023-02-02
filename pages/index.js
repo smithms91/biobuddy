@@ -10,6 +10,11 @@ import TextField from '@mui/material/TextField';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import EastIcon from '@mui/icons-material/East';
+import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+
 //DB
 import PocketBase from 'pocketbase';
 
@@ -17,10 +22,46 @@ import { useState } from 'react';
 
 export default function Home({ finalData }) {
 
-  const [biosCreated, setBiosCreated] = useState(finalData.likes);
-  const [value, setValue] = useState('funny');
+  const [biosCreated, setBiosCreated] = useState(finalData?.likes);
+  const [bio, setBio] = useState('');
+  const [vibe, setVibe] = useState('funny');
   const [AIResponse, setAIResponse] = useState('')
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const prompt =
+    vibe === 'funny'
+      ? `Generate 2 funny twitter bios with no hashtags and clearly labeled "1." and "2.". Make sure each generated bio is at max 20 words and base it on this context: ${bio}${bio.slice(-1) === "." ? "" : "."}`
+      : `Generate 2 ${vibe} twitter bios with no hashtags and clearly labeled "1." and "2.". Make sure each generated bio is at max 20 words and base it on this context: ${bio}${bio.slice(-1) === "." ? "" : "."}`
+
+  const handleOpenAIResponse = async (e) => {
+    e.preventDefault();
+    setAIResponse('');
+    setLoading(true);
+    let response = await fetch('/api/openai', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'Application/JSON'
+      },
+      body: JSON.stringify(prompt)
+    })
+    let newResponse = await response.json()
+    setAIResponse(newResponse.choices[0].text);
+    console.log(AIResponse)
+    setLoading(false);
+  }
 
   const handleBioAPI = async () => {
 
@@ -35,6 +76,16 @@ export default function Home({ finalData }) {
     setBiosCreated(newResponse.likes)
   }
 
+  const action = (
+    <IconButton
+      size="small"
+      aria-label="close"
+      color="inherit"
+      onClick={handleClose}
+    >
+      <CloseIcon fontSize="small" />
+    </IconButton>
+  );
 
   return (
     <>
@@ -44,7 +95,7 @@ export default function Home({ finalData }) {
         <meta name="viewport" content="initial-scale=1, width=device-width" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
+      <main className={styles.main} style={AIResponse !== '' ? {'marginBottom': '5rem'} : {'marginBottom': '0rem'}}>
         <button className={styles.github_button}><GitHubIcon width={30} height={30} /><span>Star on GitHub</span></button>
         <h1>Generate your next Twitter bio in seconds</h1>
         <p>{biosCreated} bios created so far.</p>
@@ -53,7 +104,7 @@ export default function Home({ finalData }) {
             <span>1</span>
             <h5>Copy your current bio (or write a few sentences about yourself).</h5>
           </div>
-          <TextField InputLabelProps={{ style: { color: "rgba(0,0,0,.5)" } }} fullWidth className={styles.textbox} id="outlined-basic" label="Tell us about yourself" variant="outlined" multiline rows={4} />
+          <TextField onChange={(e) => setBio(e.target.value)} InputLabelProps={{ style: { color: "rgba(0,0,0,.5)" } }} fullWidth className={styles.textbox} id="outlined-basic" label="Tell us about yourself" variant="outlined" multiline rows={4} />
           <div className={styles.info_container}>
             <span>2</span>
             <h5>Select your vibe.</h5>
@@ -63,9 +114,9 @@ export default function Home({ finalData }) {
             <Select style={{ 'color': 'rgba(0,0,0,.5)' }} className={styles.dropdown}
               labelId="demo-simple-select-helper-label"
               id="demo-simple-select-helper"
-              value={value}
+              value={vibe}
               label="Vibe"
-              onChange={(e) => setValue(e.target.value)}
+              onChange={(e) => setVibe(e.target.value)}
             >
               <MenuItem style={{ 'color': 'rgba(0,0,0,.5)' }} value={'funny'}>Funny</MenuItem>
               <MenuItem style={{ 'color': 'rgba(0,0,0,.5)' }} value={'professional'}>Professional</MenuItem>
@@ -74,13 +125,21 @@ export default function Home({ finalData }) {
           </FormControl>
           {/* <button className={styles.button}>Generate your bio.</button> */}
         </div>
-        <button className={styles.response_button} onClick={(e) => handleBioAPI()}>Generate your bio. <EastIcon /></button>
+        <button className={styles.response_button} onClick={(e) => { handleBioAPI(); handleOpenAIResponse(e) }}>Generate your bio. <EastIcon /></button>
         <div className={styles.response_box}>
-          {AIResponse &&
-            <>
-              <p style={{ 'marginTop': '1rem' }}>asdsIt is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
-              <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
-            </>
+          {AIResponse !== '' && <h1 style={{'fontSize': '1.5rem', 'marginTop': '-1rem'}}>Your Generated Bios</h1>}
+          {AIResponse.substring(AIResponse.indexOf("1") + 3).split("2.").map((singleResponse) => {
+            return (
+              <div onClick={(e) => {
+                navigator.clipboard.writeText(singleResponse);
+                handleClick()
+              }}>
+                {loading && <p>loading</p>}
+                {AIResponse !== '' && <p className={styles.single_response}>{singleResponse}</p>}
+                {/* {!loading ? <p>{singleResponse}</p> : ""} */}
+              </div>
+            )
+          })
           }
         </div>
         <div className={styles.footer_box}>
@@ -91,6 +150,14 @@ export default function Home({ finalData }) {
           </ul>
         </div>
       </main>
+
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message="Bio has been copied!"
+        action={action}
+      />
     </>
   )
 }
@@ -98,10 +165,7 @@ export default function Home({ finalData }) {
 
 export async function getServerSideProps(context) {
 
-  const pb = new PocketBase('http://127.0.0.1:8090');
-  const data = {
-    "likes": 123,
-  };
+  const pb = new PocketBase('http://127.0.0.1:8090')
 
   const authData = await pb.admins.authWithPassword(process.env.DB_USERNAME, process.env.DB_PASSWORD);
   const likes = await pb.collection('likes').getOne(process.env.DB_TABLE_ID);
@@ -109,6 +173,6 @@ export async function getServerSideProps(context) {
   let finalData = JSON.parse(JSON.stringify(likes));
 
   return {
-    props: { finalData }, // will be passed to the page component as props
+    props: { finalData } // will be passed to the page component as props
   }
 }

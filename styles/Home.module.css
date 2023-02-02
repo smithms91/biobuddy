@@ -85,10 +85,15 @@
   align-items: center;
   font-size: 1rem;
   font-weight: 100;
+  cursor: pointer;
+}
+
+.response_box {
+  margin-top: 2rem;
 }
 
 .response_box p {
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   padding: 1rem 2rem;
   border: 1px solid lightgrey;
   border-radius: 10px;
@@ -97,12 +102,19 @@
 
 }
 
+.single_response {
+  cursor: pointer;
+}
+
 .footer_box {
   position: fixed;
   bottom: 0;
+  left: 0;
+  right: 0;
   border-top: 1px solid lightgrey;
-  width: 100%;
+  width: 100vw;
   text-align: center;
+  background-color: rgba(255, 255, 255, 0.919);
 }
 
 .footer_box h5 {
