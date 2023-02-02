@@ -1,5 +1,6 @@
 // import PocketBase from 'pocketbase';
 import { connectDb, models } from "../../lib/db"
+const mongoose = require('mongoose');
 
 
 // Gets current bio created amount, then updates. Couldnt update ++ in 1 DB Call

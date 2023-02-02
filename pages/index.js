@@ -173,7 +173,6 @@ export async function getServerSideProps(context) {
   // const likes = await pb.collection('likes').getOne(process.env.DB_TABLE_ID);
   // let finalData = JSON.parse(JSON.stringify(likes));
   mongoose.set("strictQuery", false);
-
   connectDb();
   const currentBiosCreated = await models.Bio.findOne();
 
