@@ -1,5 +1,4 @@
 const { Configuration, OpenAIApi } = require( "openai");
-import { NextApiRequest, NextApiResponse } from 'next'
 
 
 export default async function handler(NextApiRequest, NextApiResponse) {
