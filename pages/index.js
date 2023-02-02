@@ -2,11 +2,25 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
+import { useState } from 'react';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import TwitterIcon from '@mui/icons-material/Twitter';
 import GitHubIcon from '@mui/icons-material/GitHub';
-
+import EastIcon from '@mui/icons-material/East';
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+
+  const [counter, setCounter] = useState(0);
+  const [value, setValue] = useState('funny');
+  const [AIResponse, setAIResponse] = useState('')
+
   return (
     <>
       <Head>
@@ -16,21 +30,43 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <button className={styles.github_button}><GitHubIcon width={30} height={30}/><p>Star on GitHub</p></button>
+        <button className={styles.github_button}><GitHubIcon width={30} height={30} /><span>Star on GitHub</span></button>
         <h1>Generate your next Twitter bio in seconds</h1>
         <p>18,421 bios created so far.</p>
         <div className={styles.content_box}>
           <h5>Copy your current bio (or write a few sentences about yourself).</h5>
-          <textarea></textarea>
-          <h5>Select your vibe.</h5>
-          <textarea></textarea>
-          <button>Generate your bio.</button>
+          <TextField InputLabelProps={{ style: { color: "rgba(0,0,0,.5)" } }} fullWidth className={styles.textbox} id="outlined-basic" label="Tell us about yourself" variant="outlined" multiline rows={4} />
+          <h5 className={styles.vibe}>Select your vibe.</h5>
+          <FormControl>
+            <InputLabel id="demo-simple-select-helper-label">Vibe</InputLabel>
+            <Select style={{'color': 'rgba(0,0,0,.5)'}} className={styles.dropdown}
+              labelId="demo-simple-select-helper-label"
+              id="demo-simple-select-helper"
+              value={value}
+              label="Vibe"
+              onChange={(e) => setValue(e.target.value)}
+            >
+              <MenuItem style={{'color': 'rgba(0,0,0,.5)'}} value={'funny'}>Funny</MenuItem>
+              <MenuItem style={{'color': 'rgba(0,0,0,.5)'}} value={'professional'}>Professional</MenuItem>
+              <MenuItem style={{'color': 'rgba(0,0,0,.5)'}} value={'general'}>General</MenuItem>
+            </Select>
+          </FormControl>
+          {/* <button className={styles.button}>Generate your bio.</button> */}
+        </div>
+        <button className={styles.response_button}>Generate your bio. <EastIcon /></button>
+        <div className={styles.response_box}>
+          {AIResponse &&
+            <>
+              <p style={{ 'margin-top': '1rem' }}>asdsIt is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+              <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+            </>
+          }
         </div>
         <div className={styles.footer_box}>
-          <h5>Powered by OpenAI and Vercel Edge Functions</h5>
-          <ul>
-            <li>Twitter</li>
-            <li>Github</li>
+          <h5>Powered by <strong>OpenAI</strong> and <strong>Vercel Edge Functions</strong></h5>
+          <ul style={{ 'margin': '.5rem 0 .7rem 0' }}>
+            <li style={{ 'margin-right': '1rem' }}><TwitterIcon /></li>
+            <li><GitHubIcon /></li>
           </ul>
         </div>
       </main>
