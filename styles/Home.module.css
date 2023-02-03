@@ -173,4 +173,39 @@
 /* Tablet and Smaller Desktop */
 @media (min-width: 701px) and (max-width: 1120px) {}
 
-@media (prefers-color-scheme: dark) {}
+@media (prefers-color-scheme: dark) {
+  .main p {
+    opacity: 90%;
+  }
+  .github_button {
+    color: black;
+  }
+
+  .textbox,
+  .dropdown {
+    background-color: rgba(255, 255, 255, 0.977);
+  }
+
+  .info_container h5 {
+    color: rgba(255, 255, 255, 0.977);
+  }
+
+  .info_container span,
+  .info_container2 span {
+    background-color: rgba(255, 255, 255, 0.977);
+    color: black;
+  }
+
+  .response_button {
+    background-color: rgba(255, 255, 255, 0.977);
+    color: black;
+  }
+
+  .single_response {
+    background-color: red;
+  }
+
+  .footer_box {
+    background-color: black;
+  }
+}

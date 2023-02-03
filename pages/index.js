@@ -20,7 +20,7 @@ const mongoose = require('mongoose');
 
 // import PocketBase from 'pocketbase';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Home(props) {
   const [biosCreated, setBiosCreated] = useState(props.biosCreated);
@@ -29,6 +29,17 @@ export default function Home(props) {
   const [AIResponse, setAIResponse] = useState('')
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+
+  let bgColor, fgColor;
+  useEffect(() => {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      bgColor = 'rgba(255,255,255, .9)';
+      fgColor = 'rgba(0,0,0, .9)';
+    } else {
+      bgColor = 'rgba(0,0,0, .9)';
+      fgColor = 'rgb(255,255,255, .9)';
+    }
+  }, [])
 
   const handleClick = () => {
     setOpen(true);
@@ -98,6 +109,7 @@ export default function Home(props) {
     </IconButton>
   );
 
+
   return (
     <>
       <Head>
@@ -115,14 +127,14 @@ export default function Home(props) {
             <span>1</span>
             <h5>Copy your current bio (or write a few sentences about yourself).</h5>
           </div>
-          <TextField onChange={(e) => setBio(e.target.value)} InputLabelProps={{ style: { color: "rgba(0,0,0,.5)" } }} fullWidth className={styles.textbox} id="outlined-basic" label="Tell us about yourself" variant="outlined" multiline rows={4} />
+          <TextField onChange={(e) => setBio(e.target.value)} InputLabelProps={{ style: { color: fgColor } }} fullWidth className={styles.textbox} id="outlined-basic" label="Tell us about yourself" variant="outlined" multiline rows={4} />
           <div className={styles.info_container2}>
             <span>2</span>
             <h5>Select your vibe.</h5>
           </div>
           <FormControl>
-            <InputLabel id="demo-simple-select-helper-label">Vibe</InputLabel>
-            <Select style={{ 'color': 'rgba(0,0,0,.5)' }} className={styles.dropdown}
+            <InputLabel style={{ 'color': fgColor }} id="demo-simple-select-helper-label">Vibe</InputLabel>
+            <Select style={{ 'color': fgColor }} className={styles.dropdown}
               labelId="demo-simple-select-helper-label"
               id="demo-simple-select-helper"
               value={vibe}
@@ -175,6 +187,7 @@ export default function Home(props) {
 
 
 export async function getServerSideProps(context) {
+
 
   // const pb = new PocketBase('http://127.0.0.1:8090')
   // const authData = await pb.admins.authWithPassword(process.env.DB_USERNAME, process.env.DB_PASSWORD);
